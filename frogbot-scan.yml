@@ -1,0 +1,27 @@
+name: "Frogbot Scan Repository"
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *" # Runs every 5 minutes
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  scan-repository:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run Frogbot
+        uses: jfrog/frogbot@v2
+        env:
+          JF_URL: ${{ secrets.JF_URL }}
+          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JF_GIT_BASE_BRANCH: test-frogbot # Change this as per your branch name
+          JF_GIT_OWNER: your-github-username # Optional
+          # Add other necessary environment variables
